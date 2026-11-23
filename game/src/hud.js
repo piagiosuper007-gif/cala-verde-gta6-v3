@@ -36,6 +36,9 @@ export function drawMinimap(player, cars, police, enemies, beaconPos) {
   g.strokeStyle = '#555a66'; g.lineWidth = 3;
   for (let i = -4; i <= 4; i++) { g.beginPath(); g.moveTo(px(i * 40), 0); g.lineTo(px(i * 40), W); g.stroke(); g.beginPath(); g.moveTo(0, pz(i * 40)); g.lineTo(W, pz(i * 40)); g.stroke(); }
   g.fillStyle = '#ffd94a'; g.beginPath(); g.arc(px(beaconPos.x), pz(beaconPos.z), 5, 0, 7); g.fill();
+  // Landmarks: garage (green), bank (gold), hideout (purple), marina (blue), plaza (white)
+  const marks = [[80, 80, '#58d68d'], [-80, -80, '#f5b041'], [-120, 120, '#af7ac5'], [170, 40, '#5dade2'], [0, 0, '#ffffff']];
+  for (const [mx, mz, col] of marks) { g.fillStyle = col; g.beginPath(); g.arc(px(mx), pz(mz), 4, 0, 7); g.fill(); }
   g.fillStyle = '#ff5533';
   for (const c of police.cars) { g.beginPath(); g.arc(px(c.x), pz(c.z), 3.5, 0, 7); g.fill(); }
   g.fillStyle = '#ff2222';

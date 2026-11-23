@@ -43,18 +43,18 @@ export function buildWorld(scene, seed) {
       boat.position.set(185 + i * 14, 1.2, 8 + j * 14 + i * 30); scene.add(boat);
     }
   }
-  // Buildings: blocks between roads
+  // Buildings sit INSIDE blocks (centres offset +20 from road centrelines), never on roads.
   const geoBox = new THREE.BoxGeometry(1, 1, 1);
   let count = 0;
-  for (let gx = -4; gx <= 4; gx++) for (let gz = -4; gz <= 4; gz++) {
-    const cx = gx * CFG.block, cz = gz * CFG.block;
+  for (let gx = -4; gx <= 3; gx++) for (let gz = -4; gz <= 3; gz++) {
+    const cx = gx * CFG.block + 20, cz = gz * CFG.block + 20;
     if (Math.abs(cx) < 25 && Math.abs(cz) < 25) continue; // plaza
     if (cz > 170) continue;
-    const n = irange(rng, 2, 3);
+    const n = 2;
     for (let k = 0; k < n; k++) {
-      const ox = range(rng, -13, 13), oz = range(rng, -13, 13);
-      if (Math.abs(ox) < 7 && Math.abs(oz) < 7) continue;
-      const w = range(rng, 10, 16), d = range(rng, 10, 16), h = range(rng, 8, 34);
+      const ox = range(rng, -6, 6), oz = range(rng, -6, 6);
+      if (Math.abs(ox) < 2 && Math.abs(oz) < 2) continue; // keep a gap between the pair
+      const w = range(rng, 10, 14), d = range(rng, 10, 14), h = range(rng, 8, 34);
       const mat = new THREE.MeshLambertMaterial({ map: buildingTexture(rng, pick(rng, palette)) });
       const b = new THREE.Mesh(geoBox, mat);
       b.scale.set(w, h, d); b.position.set(cx + ox, h / 2, cz + oz); scene.add(b);

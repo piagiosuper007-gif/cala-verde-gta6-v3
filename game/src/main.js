@@ -21,7 +21,7 @@ const beacon = makeBeacon(scene);
 const police = new Police(scene);
 const enemies = new Enemies(scene);
 const traffic = spawnTraffic(scene, S.seed);
-const game = { scene, colliders, traffic, police, camOrbit: false, playerMesh: null, startGame, enterCar };
+const game = { scene, camera, colliders, traffic, police, camOrbit: false, playerMesh: null, startGame, enterCar };
 window.__cvGame = game;
 
 // Player on-foot mesh
@@ -128,7 +128,7 @@ const clock = new THREE.Clock();
 let sirenT = 0;
 function animate() {
   requestAnimationFrame(animate);
-  const dt = Math.min(0.05, clock.getDelta());
+  const dt = Math.min(0.1, clock.getDelta());
   S.frames++;
   if (S.mode === 'title' && game.camOrbit) {
     const a = performance.now() / 9000;
@@ -140,7 +140,7 @@ function animate() {
   }
   if (S.mode !== 'playing') {
     if (S.mode === 'complete') { renderer.render(scene, camera); if (S.frames >= 5) window.__shotReady = true; }
-    else renderer.render(scene, camera);
+    else { renderer.render(scene, camera); if (S.frames >= 5) window.__shotReady = true; }
     return;
   }
   S.time += dt * 0.02; if (S.time >= 24) S.time = 0;

@@ -11,7 +11,7 @@ export class Police {
   setWanted(n, player, colliders) {
     S.wanted = Math.max(0, Math.min(5, n));
     if (S.wanted === 0) this.clear();
-    else this.dispatchMsg = ['CVPD: all clear.', 'CVPD: suspect spotted, one unit responding.', 'CVPD: pursuit in progress.', 'CVPD: roadblocks going up — three stars.', 'CONDOR-2 airborne. Four stars, do not lose him.', 'CVPD: maximum alert. All units converge.'][S.wanted];
+    else this.dispatchMsg = ['CVPD: all clear.', 'CVPD: suspect spotted, one unit responding.', 'CVPD: pursuit in progress.', 'CVPD: roadblocks up — CONDOR-2 airborne, three stars.', 'CONDOR-2 overhead. Four stars, do not lose him.', 'CVPD: maximum alert. All units converge.'][S.wanted];
   }
   clear() { for (const c of this.cars) this.scene.remove(c.mesh); this.cars = []; for (const b of this.blocks) this.scene.remove(b); this.blocks = []; if (this.heliMesh) { this.scene.remove(this.heliMesh); this.heliMesh = null; this.heli = null; } }
   ensure(scene, player, colliders) {
@@ -30,24 +30,24 @@ export class Police {
     // Roadblocks at 3+ stars: two parked cars across the road ahead of the player
     if (want >= 3 && this.blocks.length === 0) {
       for (const off of [-4, 4]) {
-        const m = makeCarMesh(0x1a1a22, true);
+        const m = makeCarMesh(0xe8e8e8, true); // white roadblock car: reads against dark asphalt
         m.position.set(player.x + Math.sin(player.heading) * 26 + off, 0, player.z + Math.cos(player.heading) * 26);
         m.rotation.y = player.heading + Math.PI / 2; scene.add(m); this.blocks.push(m);
       }
     }
     if (want < 3 && this.blocks.length) { for (const b of this.blocks) scene.remove(b); this.blocks = []; }
-    // CONDOR-2 helicopter at 4+ stars
-    if (want >= 4 && !this.heliMesh) {
+    // CONDOR-2 helicopter at 3+ stars, hovering ahead of the player so it reads on screen
+    if (want >= 3 && !this.heliMesh) {
       const g = new THREE.Group();
-      const body = new THREE.Mesh(new THREE.BoxGeometry(3, 1.6, 6), new THREE.MeshLambertMaterial({ color: 0x223344 }));
+      const body = new THREE.Mesh(new THREE.BoxGeometry(3, 1.6, 6), new THREE.MeshLambertMaterial({ color: 0x5a7a9a }));
       g.add(body);
       const rotor = new THREE.Mesh(new THREE.BoxGeometry(9, 0.12, 0.5), new THREE.MeshLambertMaterial({ color: 0x111111 }));
       rotor.position.y = 1.1; rotor.name = 'rotor'; g.add(rotor);
       const cone = new THREE.Mesh(new THREE.ConeGeometry(5, 30, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0xfff2b0, transparent: true, opacity: 0.22, side: THREE.DoubleSide }));
       cone.rotation.x = Math.PI; cone.position.y = -16; g.add(cone);
-      g.position.set(player.x, 42, player.z); scene.add(g); this.heliMesh = g; this.heli = { x: player.x, z: player.z };
+      g.position.set(player.x + Math.sin(player.heading) * 34, 22, player.z + Math.cos(player.heading) * 34); scene.add(g); this.heliMesh = g; this.heli = { x: player.x, z: player.z };
     }
-    if (want < 4 && this.heliMesh) { scene.remove(this.heliMesh); this.heliMesh = null; this.heli = null; }
+    if (want < 3 && this.heliMesh) { scene.remove(this.heliMesh); this.heliMesh = null; this.heli = null; }
   }
   update(dt, player, colliders) {
     this.ensure(this.scene, player, colliders);
@@ -59,9 +59,10 @@ export class Police {
       if (d < 3.2) { S.health = Math.max(0, S.health - 12 * dt); } // ram damage
     }
     if (this.heliMesh) {
-      this.heliMesh.position.x += (player.x - this.heliMesh.position.x) * dt * 1.2;
-      this.heliMesh.position.z += (player.z - this.heliMesh.position.z) * dt * 1.2;
-      this.heliMesh.position.y = 42 + Math.sin(performance.now() / 700) * 2;
+      const hx = player.x + Math.sin(player.heading) * 34, hz = player.z + Math.cos(player.heading) * 34;
+      this.heliMesh.position.x += (hx - this.heliMesh.position.x) * dt * 1.2;
+      this.heliMesh.position.z += (hz - this.heliMesh.position.z) * dt * 1.2;
+      this.heliMesh.position.y = 22 + Math.sin(performance.now() / 700) * 2;
       const r = this.heliMesh.getObjectByName('rotor'); if (r) r.rotation.y += dt * 20;
     }
     // heat decay when far from police and not committing crimes
