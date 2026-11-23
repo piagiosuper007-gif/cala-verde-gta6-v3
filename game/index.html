@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CALA VERDE — open-world crime in a golden-hour coastal city</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#1a0f0a;font-family:Verdana,system-ui,sans-serif;color:#fff}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block}
+  .panel{position:fixed;background:rgba(10,8,12,.62);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:8px 12px}
+  #hud{top:10px;left:10px;font-size:14px;line-height:1.5}
+  #stars{color:#ffd94a;font-size:20px;letter-spacing:3px}
+  #healthbar{width:150px;height:10px;background:#333;border-radius:5px;overflow:hidden}
+  #healthfill{height:100%;width:100%;background:#58d68d}
+  #objective{top:10px;right:10px;max-width:340px;font-size:13px}
+  #objective b{color:#ffd94a}
+  #dialogue{bottom:120px;left:50%;transform:translateX(-50%);max-width:640px;font-size:14px;display:none}
+  #banner{top:38%;left:50%;transform:translate(-50%,-50%);font-size:34px;font-weight:bold;color:#ffd94a;text-shadow:0 2px 12px #000;display:none;text-align:center}
+  #title{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,rgba(20,8,4,.25),rgba(20,8,4,.78));z-index:5}
+  #title h1{font-size:64px;margin:0;letter-spacing:6px;color:#ffd94a;text-shadow:0 4px 24px #000}
+  #title h2{font-size:18px;margin:6px 0 18px;color:#ffe9c4}
+  #title p{font-size:14px;line-height:1.7;max-width:620px;color:#f5e6d0}
+  #title .go{font-size:18px;color:#ffd94a;margin-top:10px}
+  #minimap{position:fixed;right:10px;bottom:10px;border:2px solid rgba(255,255,255,.35);border-radius:50%;background:rgba(10,10,16,.7)}
+  #controls{bottom:10px;left:10px;font-size:12px;line-height:1.6}
+  #radio{bottom:200px;left:10px;font-size:12px;color:#ffd94a}
+  #complete{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,8,4,.72);z-index:6;text-align:center}
+  #complete h1{font-size:44px;color:#ffd94a;margin:0}
+  #complete p{font-size:15px;line-height:1.7;max-width:560px}
+  kbd{background:#333;border:1px solid #777;border-radius:4px;padding:0 5px}
+</style>
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud" class="panel"><div id="stars">☆☆☆☆☆</div><div>Health <div id="healthbar"><div id="healthfill"></div></div></div><div>Cash: $<span id="cash">250</span></div><div>Time: <span id="clock">17:36</span></div><div>Weapon: <span id="weapon">Pistol [1]</span></div></div>
+<div id="objective" class="panel"><b>Objective</b><div id="objtext">Press Enter to start</div><div id="missiontitle" style="color:#ffd94a"></div></div>
+<div id="dialogue" class="panel"></div>
+<div id="banner"></div>
+<div id="radio" class="panel">♪ VERDE FM — sunset pop [R]</div>
+<div id="controls" class="panel"><kbd>WASD</kbd> move / drive · <kbd>Shift</kbd> run · <kbd>E</kbd> enter/exit car · <kbd>F</kbd>/click fire · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> weapons · <kbd>Q</kbd> crew ability · <kbd>R</kbd> radio · <kbd>P</kbd> pause · <kbd>M</kbd> mute</div>
+<canvas id="minimap" width="180" height="180"></canvas>
+<div id="title"><h1>CALA VERDE</h1><h2>Open-world crime in a golden-hour coastal city</h2><p>Eight story jobs. Steal cars, outrun the CVPD, lose CONDOR-2 in the sky, and pull the Verde Vault heist with your crew — Rico and Mara — at your side. An original city, an original story. No real place, no real gang.</p><p class="go">Press ENTER to start &nbsp;·&nbsp; progress saves automatically</p><p style="font-size:12px;color:#d8c8b8">WASD move/drive · E enter car · F fire · Q crew ability · R radio</p></div>
+<div id="complete"><h1>MISSION COMPLETE</h1><p id="completetext"></p><p>Press ENTER for the next job.</p></div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
